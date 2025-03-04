@@ -24,7 +24,7 @@ export default function CustomChatMessages() {
         <ChatMessages.Loading />
       </ChatMessages.List>
       <ChatMessages.Actions />
-      <ChatStarter />
+      {!messages || (messages.length === 0 && <ChatStarter />)}
     </ChatMessages>
   );
 }
