@@ -15,6 +15,13 @@ Then check the parameters that have been pre-configured in the `.env` file in th
 
 If you are using any tools or data sources, you can update their config files in the `config` folder.
 
+Add folder `storage` if it does not exist in root and add following files with content `{}`
+
+- docstore.json
+- graph_store.json
+- image\_\_vector_store.json
+- index_store.json
+
 Second, generate the embeddings of the documents in the `./data` directory:
 
 ```

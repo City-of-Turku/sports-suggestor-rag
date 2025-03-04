@@ -20,7 +20,8 @@ def get_chat_engine(params=None, event_handlers=None, **kwargs):
     index_config = IndexConfig(callback_manager=callback_manager, **(params or {}))
     index = get_index(index_config)
     if index is not None:
-        query_engine_tool = get_query_engine_tool(index, **kwargs)
+        qe_tool_desc = "Use this tool to retrieve information about sports groups from an index."
+        query_engine_tool = get_query_engine_tool(index, description=qe_tool_desc, **kwargs)
         tools.append(query_engine_tool)
 
     # Add additional tools
