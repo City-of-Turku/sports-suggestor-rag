@@ -12,6 +12,10 @@ import { ToolAnnotations } from "./tools/chat-tools";
 export function ChatMessageContent() {
   const { isLoading, append } = useChatUI();
   const { message } = useChatMessage();
+  if (process.env.NEXT_PUBLIC_DISABLE_ANNOTATIONS) {
+    message.annotations = [];
+  }
+
   const customContent = [
     {
       // override the default markdown component
