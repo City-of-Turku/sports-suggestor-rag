@@ -13,7 +13,7 @@ RUN npm install && npm run build
 # ====================================
 # Backend
 # ====================================
-FROM python:3.11 AS build
+FROM python:3.11-slim AS build
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python
 
 # Install Chromium for web loader
 # Can disable this if you don't use the web loader to reduce the image size
-RUN apt update && apt install -y chromium chromium-driver
+#RUN apt update && apt install -y chromium chromium-driver
 
 # Install dependencies
 COPY ./pyproject.toml ./poetry.lock* /app/
