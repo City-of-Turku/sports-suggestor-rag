@@ -40,6 +40,17 @@ if environment == "dev":
         allow_methods=["*"],
         allow_headers=["*"],
     )
+if environment == "prod":
+    logger.info("Running in production mode.")    
+    allow_origins = [o.strip() for o in os.getenv("CORS_ORIGIN_WHITELIST", "").split(",")]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allow_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 def mount_static_files(directory, path, html=False):

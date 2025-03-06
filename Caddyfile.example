@@ -1,0 +1,8 @@
+# Caddyfile
+
+http://your-ip-address:80 {
+    # backend routes
+    handle /* {
+        reverse_proxy backend:8000
+    }
+}

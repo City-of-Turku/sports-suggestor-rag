@@ -7,3 +7,6 @@ static/
 data/*
 !data/.gitkeep
 chroma_db
+storage_vol
+chroma_db_vol
+Caddyfile
