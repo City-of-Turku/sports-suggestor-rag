@@ -2,7 +2,7 @@
 
 http://your-ip-address:80 {
     # backend routes
-    handle /fastapi/* {
+    handle /* {
         reverse_proxy backend:8000
     }
 }
