@@ -1,362 +1,781 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fi">
-<head>
-  <meta charset="UTF-8">
-  <title>Liikuntalaji Suosittelija</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.6;
-    }
-    h1, h2 {
-      color: #333;
-    }
-    #question-container, #result-container {
-      margin-top: 20px;
-    }
-    .option-button {
-      margin: 5px;
-      padding: 10px 15px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <h1>Liikuntalaji Suosittelija</h1>
-  <div id="question-container"></div>
-  <div id="result-container"></div>
-
-  <script>
-    // Lajilista
-    const sports = [
-      {
-        "sport": "Ampumaurheilu",
-        "activity_type": "Ajattelu",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "BMX ja pyöräily",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Ulko",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Cheerleading ja cheertanssi",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Golf",
-        "activity_type": "Ajattelu",
-        "interaction_type": "Yksin",
-        "progress_rate": "Pidemmin",
-        "environment": "Ulko",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Jalkapallo ja futsal",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Ulko ja sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Joukkuevoimistelu",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Jääkiekko",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Kamppailulajit",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Koripallo",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Lentopallo ja beach volley",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Moottoriurheilu",
-        "activity_type": "Ajattelu",
-        "interaction_type": "Yksin",
-        "progress_rate": "Pidemmin",
-        "environment": "Ulko",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Muut lajit",
-        "activity_type": "Ajattelu",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin ja pidemmin",
-        "environment": "Ulko ja sisä",
-        "intensity": "Reaktio ja rauhallinen",
-        "challenge_level": "Helppo ja haastava"
-      },
-      {
-        "sport": "Muut palloilulajit",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Nopeammin ja pidemmin",
-        "environment": "Ulko ja sisä",
-        "intensity": "Reaktio ja rauhallinen",
-        "challenge_level": "Helppo ja haastava"
-      },
-      {
-        "sport": "Muut voimistelulajit ja sirkus",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Nyrkkeily",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Paini",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Ratsastus",
-        "activity_type": "Ajattelu",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Ulko",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Salibandy",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Suunnistus",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Ulko",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Taito- ja muodostelmaluistelu",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Tanssi",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio ja rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Telinevoimistelu",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Pidemmin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Tennis ja padel",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
-      },
-      {
-        "sport": "Uinti ja vesiliikunta",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin ja yhdessä",
-        "progress_rate": "Nopeammin",
-        "environment": "Sisä",
-        "intensity": "Rauhallinen",
-        "challenge_level": "Helppo"
-      },
-      {
-        "sport": "Yleisurheilu",
-        "activity_type": "Aktiivinen",
-        "interaction_type": "Yksin",
-        "progress_rate": "Nopeammin",
-        "environment": "Ulko",
-        "intensity": "Reaktio",
-        "challenge_level": "Haastava"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liikuntalaji Suosittelija</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-dark: #3a56d4;
+        --secondary: #3f37c9;
+        --accent: #4cc9f0;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #4ade80;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --radius: 8px;
       }
-    ];
 
-    // Kysymykset esitetään yksi kerrallaan
-    const questions = [
-      { key: 'activity_type', question: 'Haluatko, että lajissa korostuu enemmän ajattelu vai aktiivisuus?', options: ['Ajattelu', 'Aktiivinen'] },
-      { key: 'interaction_type', question: 'Haluatko harjoitella yksin vai yhdessä?', options: ['Yksin', 'Yhdessä'] },
-      { key: 'progress_rate', question: 'Kuinka nopeasti haluat edetä lajissa?', options: ['Nopeammin', 'Pidemmin'] },
-      { key: 'environment', question: 'Missä ympäristössä haluaisit harjoitella?', options: ['Sisä', 'Ulko'] },
-      { key: 'intensity', question: 'Millainen intensiteetti sinua miellyttää?', options: ['Rauhallinen', 'Reaktio'] },
-      { key: 'challenge_level', question: 'Kuinka haastavaa lajin tulisi olla?', options: ['Helppo', 'Haastava'] }
-    ];
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    let currentQuestionIndex = 0;
-    const userAnswers = {};
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fb;
+        color: var(--dark);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        padding: 0;
+      }
 
-    function showQuestion() {
-      const container = document.getElementById('question-container');
-      container.innerHTML = '';
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        width: 100%;
+      }
 
-      if (currentQuestionIndex < questions.length) {
-        const current = questions[currentQuestionIndex];
+      header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 2rem 0;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
 
-        // Suodatetaan vaihtoehdot, jotka tuottavat vähintään yhden tuloksen
-        const validOptions = current.options.filter(option => {
-          const simulatedAnswers = { ...userAnswers, [current.key]: option };
-          const simulatedResults = sports.filter(item => {
-            return Object.keys(simulatedAnswers).every(key => item[key].includes(simulatedAnswers[key]));
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.8;
+      }
+
+      .card {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 2rem;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+      }
+
+      h2 {
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        font-size: 1.5rem;
+      }
+
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .option-button {
+        flex: 1;
+        min-width: 180px;
+        background-color: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        border-radius: var(--radius);
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .option-button:hover {
+        background-color: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .result-list {
+        list-style: none;
+        margin: 1.5rem 0;
+      }
+
+      .result-item {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background-color: var(--light);
+        border-radius: var(--radius);
+        border-left: 4px solid var(--accent);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+      }
+
+      .result-item:hover {
+        transform: translateX(5px);
+        background-color: #e9f4ff;
+        border-left-color: var(--primary);
+      }
+
+      .result-item i {
+        margin-right: 0.75rem;
+        color: var(--primary);
+      }
+
+      .restart-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 1.5rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .restart-btn:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .progress-container {
+        margin: 2rem 0;
+        background-color: #e9ecef;
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        border-radius: 999px;
+        transition: width 0.3s ease;
+      }
+
+      .sport-icon {
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+        color: var(--primary);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: #ced4da;
+        margin-bottom: 1rem;
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      footer {
+        margin-top: auto;
+        text-align: center;
+        padding: 1.5rem;
+        color: #6c757d;
+        font-size: 0.875rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .option-button {
+          min-width: 100%;
+        }
+      }
+
+      .question-number {
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo">
+          <i class="fas fa-running"></i> Liikuntalaji Suosittelija
+        </div>
+        <div class="subtitle">Löydä itsellesi sopiva liikuntamuoto</div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="progress-container" id="progress-container">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+      </div>
+
+      <div class="card fade-in" id="question-container"></div>
+      <div
+        class="card fade-in"
+        id="result-container"
+        style="display: none"
+      ></div>
+    </div>
+
+    <footer>
+      <div class="container">
+        &copy; 2025 Liikuntalaji Suosittelija | Löydä oma lajisi
+      </div>
+    </footer>
+
+    <script>
+      // Lajilista
+      const sports = [
+        {
+          sport: "Ampumaurheilu",
+          activity_type: "Ajattelu",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-bullseye",
+        },
+        {
+          sport: "BMX ja pyöräily",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Ulko",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-bicycle",
+        },
+        {
+          sport: "Cheerleading ja cheertanssi",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-star",
+        },
+        {
+          sport: "Golf",
+          activity_type: "Ajattelu",
+          interaction_type: "Yksin",
+          progress_rate: "Pidemmin",
+          environment: "Ulko",
+          intensity: "Rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-golf-ball",
+        },
+        {
+          sport: "Jalkapallo ja futsal",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Ulko ja sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-futbol",
+        },
+        {
+          sport: "Joukkuevoimistelu",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-child",
+        },
+        {
+          sport: "Jääkiekko",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-hockey-puck",
+        },
+        {
+          sport: "Kamppailulajit",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-fist-raised",
+        },
+        {
+          sport: "Koripallo",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-basketball-ball",
+        },
+        {
+          sport: "Lentopallo ja beach volley",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-volleyball-ball",
+        },
+        {
+          sport: "Moottoriurheilu",
+          activity_type: "Ajattelu",
+          interaction_type: "Yksin",
+          progress_rate: "Pidemmin",
+          environment: "Ulko",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-car-side",
+        },
+        {
+          sport: "Muut lajit",
+          activity_type: "Ajattelu",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin ja pidemmin",
+          environment: "Ulko ja sisä",
+          intensity: "Reaktio ja rauhallinen",
+          challenge_level: "Helppo ja haastava",
+          icon: "fa-question-circle",
+        },
+        {
+          sport: "Muut palloilulajit",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Nopeammin ja pidemmin",
+          environment: "Ulko ja sisä",
+          intensity: "Reaktio ja rauhallinen",
+          challenge_level: "Helppo ja haastava",
+          icon: "fa-baseball-ball",
+        },
+        {
+          sport: "Muut voimistelulajit ja sirkus",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Helppo",
+          icon: "fa-rings",
+        },
+        {
+          sport: "Nyrkkeily",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-boxing-glove",
+        },
+        {
+          sport: "Paini",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-person-wrestling",
+        },
+        {
+          sport: "Ratsastus",
+          activity_type: "Ajattelu",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Ulko",
+          intensity: "Rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-horse",
+        },
+        {
+          sport: "Salibandy",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-hockey-sticks",
+        },
+        {
+          sport: "Suunnistus",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Ulko",
+          intensity: "Rauhallinen",
+          challenge_level: "Haastava",
+          icon: "fa-map-marker-alt",
+        },
+        {
+          sport: "Taito- ja muodostelmaluistelu",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Rauhallinen",
+          challenge_level: "Haastava",
+          icon: "fa-skating",
+        },
+        {
+          sport: "Tanssi",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio ja rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-music",
+        },
+        {
+          sport: "Telinevoimistelu",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Pidemmin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-balance-scale",
+        },
+        {
+          sport: "Tennis ja padel",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-table-tennis",
+        },
+        {
+          sport: "Uinti ja vesiliikunta",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin ja yhdessä",
+          progress_rate: "Nopeammin",
+          environment: "Sisä",
+          intensity: "Rauhallinen",
+          challenge_level: "Helppo",
+          icon: "fa-swimming-pool",
+        },
+        {
+          sport: "Yleisurheilu",
+          activity_type: "Aktiivinen",
+          interaction_type: "Yksin",
+          progress_rate: "Nopeammin",
+          environment: "Ulko",
+          intensity: "Reaktio",
+          challenge_level: "Haastava",
+          icon: "fa-running",
+        },
+      ];
+
+      // Some icons aren't in Font Awesome, handle missing or unsupported icons
+      const fallbackIcons = {
+        "fa-boxing-glove": "fa-user-ninja",
+        "fa-person-wrestling": "fa-user-friends",
+        "fa-hockey-sticks": "fa-hockey-puck",
+        "fa-skating": "fa-child",
+        "fa-rings": "fa-circle",
+      };
+
+      function getIcon(iconName) {
+        if (iconName in fallbackIcons) {
+          return fallbackIcons[iconName];
+        }
+        return iconName;
+      }
+
+      // Kysymykset esitetään yksi kerrallaan
+      const questions = [
+        {
+          key: "activity_type",
+          question:
+            "Haluatko, että lajissa korostuu enemmän ajattelu vai aktiivisuus?",
+          options: [
+            { value: "Ajattelu", icon: "fa-brain" },
+            { value: "Aktiivinen", icon: "fa-running" },
+          ],
+        },
+        {
+          key: "interaction_type",
+          question: "Haluatko harjoitella yksin vai yhdessä?",
+          options: [
+            { value: "Yksin", icon: "fa-user" },
+            { value: "Yhdessä", icon: "fa-users" },
+          ],
+        },
+        {
+          key: "progress_rate",
+          question: "Kuinka nopeasti haluat edetä lajissa?",
+          options: [
+            { value: "Nopeammin", icon: "fa-bolt" },
+            { value: "Pidemmin", icon: "fa-hourglass-half" },
+          ],
+        },
+        {
+          key: "environment",
+          question: "Missä ympäristössä haluaisit harjoitella?",
+          options: [
+            { value: "Sisä", icon: "fa-warehouse" },
+            { value: "Ulko", icon: "fa-cloud-sun" },
+          ],
+        },
+        {
+          key: "intensity",
+          question: "Millainen intensiteetti sinua miellyttää?",
+          options: [
+            { value: "Rauhallinen", icon: "fa-heart" },
+            { value: "Reaktio", icon: "fa-bolt" },
+          ],
+        },
+        {
+          key: "challenge_level",
+          question: "Kuinka haastavaa lajin tulisi olla?",
+          options: [
+            { value: "Helppo", icon: "fa-smile" },
+            { value: "Haastava", icon: "fa-fire" },
+          ],
+        },
+      ];
+
+      let currentQuestionIndex = 0;
+      const userAnswers = {};
+      const askedQuestions = []; // Keep track of questions that were actually asked
+
+      function updateProgressBar() {
+        // Calculate progress based on how many questions have been asked out of total possible questions
+        const progress = askedQuestions.length / questions.length;
+        const progressPercentage = progress * 100;
+        document.getElementById("progress-bar").style.width =
+          `${progressPercentage}%`;
+      }
+
+      function showQuestion() {
+        updateProgressBar();
+        const container = document.getElementById("question-container");
+        container.innerHTML = "";
+        container.style.display = "block";
+        document.getElementById("result-container").style.display = "none";
+
+        if (currentQuestionIndex < questions.length) {
+          const current = questions[currentQuestionIndex];
+
+          // Suodatetaan vaihtoehdot, jotka tuottavat vähintään yhden tuloksen
+          const validOptions = current.options.filter((option) => {
+            const simulatedAnswers = {
+              ...userAnswers,
+              [current.key]: option.value,
+            };
+            const simulatedResults = sports.filter((item) => {
+              return Object.keys(simulatedAnswers).every((key) =>
+                item[key].includes(simulatedAnswers[key]),
+              );
+            });
+            return simulatedResults.length > 0;
           });
-          return simulatedResults.length > 0;
-        });
 
-        // Jos ei validia vaihtoehtoa, näytetään tähänastiset tulokset
-        if (validOptions.length === 0) {
-          showResults();
-          return;
-        }
-        // Jos vain yksi vaihtoehto on validi, valitaan se automaattisesti
-        if (validOptions.length === 1) {
-          userAnswers[current.key] = validOptions[0];
-          currentQuestionIndex++;
-          showQuestion();
-          return;
-        }
+          // Jos ei validia vaihtoehtoa, näytetään tähänastiset tulokset tai siirrytään seuraavaan kysymykseen
+          if (validOptions.length === 0) {
+            // Skip question and move to next
+            currentQuestionIndex++;
 
-        // Näytetään kysymys ja jäljellä olevat validit vaihtoehdot
-        const qTitle = document.createElement('h2');
-        qTitle.textContent = current.question;
-        container.appendChild(qTitle);
+            // If we've reached the end or have enough answers, show results
+            if (
+              currentQuestionIndex >= questions.length ||
+              Object.keys(userAnswers).length > 0
+            ) {
+              showResults();
+            } else {
+              showQuestion(); // Try next question
+            }
+            return;
+          }
 
-        validOptions.forEach(option => {
-          const btn = document.createElement('button');
-          btn.textContent = option;
-          btn.className = 'option-button';
-          btn.onclick = () => {
-            userAnswers[current.key] = option;
+          // Jos vain yksi vaihtoehto on validi, valitaan se automaattisesti ja hypätään seuraavaan
+          if (validOptions.length === 1) {
+            userAnswers[current.key] = validOptions[0].value;
+            askedQuestions.push(current); // Add to asked questions
             currentQuestionIndex++;
             showQuestion();
-          };
-          container.appendChild(btn);
-        });
-      } else {
-        showResults();
-      }
-    }
+            return;
+          }
 
-    function showResults() {
-      const resultContainer = document.getElementById('result-container');
-      resultContainer.innerHTML = '<h2>Suositellut lajit:</h2>';
-      
-      // Suodatetaan lajilista käyttäjän vastauksien perusteella
-      const filteredSports = sports.filter(item => {
-        return Object.keys(userAnswers).every(key => item[key].includes(userAnswers[key]));
-      });
-      
-      if (filteredSports.length === 0) {
-        resultContainer.innerHTML += '<p>Valitettavasti yhtään lajia ei löytynyt.</p>';
-      } else {
-        const list = document.createElement('ul');
-        filteredSports.forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item.sport;
-          list.appendChild(li);
-        });
-        resultContainer.appendChild(list);
-      }
-      
-      // Aloita alusta -painike
-      const restartBtn = document.createElement('button');
-      restartBtn.textContent = 'Aloita alusta';
-      restartBtn.className = 'option-button';
-      restartBtn.onclick = () => {
-        currentQuestionIndex = 0;
-        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
-        resultContainer.innerHTML = '';
-        showQuestion();
-      };
-      resultContainer.appendChild(restartBtn);
-    }
+          // Näytetään kysymys ja validit vaihtoehdot
+          const qTitle = document.createElement("h2");
+          qTitle.textContent = current.question;
 
-    // Käynnistetään kysymyspolku
-    showQuestion();
-  </script>
-</body>
+          const optionsDiv = document.createElement("div");
+          optionsDiv.className = "options";
+
+          validOptions.forEach((option) => {
+            const btn = document.createElement("button");
+            btn.className = "option-button";
+            btn.innerHTML = `<i class="fas ${option.icon}"></i> ${option.value}`;
+            btn.onclick = () => {
+              btn.style.backgroundColor = "var(--primary)";
+              btn.style.color = "white";
+
+              setTimeout(() => {
+                userAnswers[current.key] = option.value;
+                askedQuestions.push(current); // Add to asked questions
+                currentQuestionIndex++;
+                showQuestion();
+              }, 300);
+            };
+            optionsDiv.appendChild(btn);
+          });
+
+          container.appendChild(qTitle);
+          container.appendChild(optionsDiv);
+
+          container.classList.remove("fade-in");
+          void container.offsetWidth; // Trigger reflow
+          container.classList.add("fade-in");
+        } else {
+          showResults();
+        }
+      }
+
+      function showResults() {
+        updateProgressBar();
+        const resultContainer = document.getElementById("result-container");
+        resultContainer.innerHTML = "";
+        resultContainer.style.display = "block";
+        document.getElementById("question-container").style.display = "none";
+
+        const resultTitle = document.createElement("h2");
+        resultTitle.innerHTML =
+          '<i class="fas fa-trophy"></i> Suositellut lajit';
+        resultContainer.appendChild(resultTitle);
+
+        // Suodatetaan lajilista käyttäjän vastauksien perusteella
+        const filteredSports = sports.filter((item) => {
+          return Object.keys(userAnswers).every((key) =>
+            item[key].includes(userAnswers[key]),
+          );
+        });
+
+        if (filteredSports.length === 0) {
+          const emptyState = document.createElement("div");
+          emptyState.className = "empty-state";
+          emptyState.innerHTML = `
+          <i class="fas fa-search"></i>
+          <p>Valitettavasti yhtään lajia ei löytynyt valituilla kriteereillä.</p>
+        `;
+          resultContainer.appendChild(emptyState);
+        } else {
+          const resultSummary = document.createElement("p");
+          resultSummary.textContent = `Löysimme ${filteredSports.length} sinulle sopivaa lajia`;
+          resultContainer.appendChild(resultSummary);
+
+          const list = document.createElement("ul");
+          list.className = "result-list";
+
+          filteredSports.forEach((item) => {
+            const li = document.createElement("li");
+            li.className = "result-item";
+
+            const iconClass = getIcon(item.icon);
+            li.innerHTML = `<i class="fas ${iconClass}"></i> ${item.sport}`;
+            list.appendChild(li);
+          });
+          resultContainer.appendChild(list);
+        }
+
+        // Näytetään vain käyttäjän vastaamat kysymykset (ei ohitettuja)
+        if (askedQuestions.length > 0) {
+          const choicesTitle = document.createElement("h3");
+          choicesTitle.textContent = "Valitsemasi kriteerit:";
+          choicesTitle.style.marginTop = "2rem";
+          choicesTitle.style.color = "var(--primary)";
+          resultContainer.appendChild(choicesTitle);
+
+          const choicesList = document.createElement("ul");
+          choicesList.className = "result-list";
+
+          askedQuestions.forEach((question) => {
+            const value = userAnswers[question.key];
+            const option = question.options.find((opt) => opt.value === value);
+
+            if (option) {
+              // Make sure we have an answer for this question
+              const li = document.createElement("li");
+              li.className = "result-item";
+              li.style.borderLeftColor = "#ced4da";
+              li.innerHTML = `<i class="fas ${option.icon}"></i> ${question.question.split("?")[0]}: <strong>${value}</strong>`;
+              choicesList.appendChild(li);
+            }
+          });
+          resultContainer.appendChild(choicesList);
+        }
+
+        // Aloita alusta -painike
+        const restartBtn = document.createElement("button");
+        restartBtn.className = "restart-btn";
+        restartBtn.innerHTML = '<i class="fas fa-redo"></i> Aloita alusta';
+        restartBtn.onclick = () => {
+          currentQuestionIndex = 0;
+          Object.keys(userAnswers).forEach((key) => delete userAnswers[key]);
+          askedQuestions.length = 0; // Clear asked questions
+          showQuestion();
+        };
+        resultContainer.appendChild(restartBtn);
+
+        resultContainer.classList.remove("fade-in");
+        void resultContainer.offsetWidth; // Trigger reflow
+        resultContainer.classList.add("fade-in");
+      }
+
+      // Käynnistetään kysymyspolku
+      window.onload = showQuestion;
+    </script>
+  </body>
 </html>
