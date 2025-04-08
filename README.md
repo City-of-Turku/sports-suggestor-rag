@@ -2,6 +2,9 @@
 
 This is a [LlamaIndex](https://www.llamaindex.ai/) project using [FastAPI](https://fastapi.tiangolo.com/) bootstrapped with [`create-llama`](https://github.com/run-llama/LlamaIndexTS/tree/main/packages/create-llama).
 
+The purpose of this AI chat app is to help users find suitable sports and groups to join. The main app is an AI RAG chat app. The app secondarily also serves a simple sports suggestor form.
+By default the AI chat app is found at root URL and sports form is found at `/lajikysely.html`.
+
 ## Getting Started
 
 First, setup the environment with poetry:
@@ -13,7 +16,7 @@ poetry install
 poetry shell
 ```
 
-Then check the parameters that have been pre-configured in the `.env` file in this directory. (E.g. you might need to configure an `OPENAI_API_KEY` if you're using OpenAI as model provider).
+Then take a look at `.env.example` files for backend and frontend and create `.env` files based on them. (E.g. you might need to configure an `OPENAI_API_KEY` if you're using OpenAI as model provider).
 
 If you are using any tools or data sources, you can update their config files in the `config` folder.
 
